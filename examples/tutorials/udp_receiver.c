@@ -17,7 +17,8 @@ int main(int argc, char*argv[]){
     gst_init(&argc, &argv);
     data.source = gst_element_factory_make("udpsrc", NULL);
     data.depayloader = gst_element_factory_make("rtph264depay", NULL);
-    data.decoder = gst_element_factory_make("avdec_h264", NULL);
+    //data.decoder = gst_element_factory_make("avdec_h264", NULL);
+    data.decoder = gst_element_factory_make("vaapih264dec", NULL);
     data.sink = gst_element_factory_make("xvimagesink", "sink");
     data.pipeline = gst_pipeline_new("udp-pipeline");
 
@@ -32,23 +33,7 @@ int main(int argc, char*argv[]){
         g_error("Failed to link elements");
         return -1;
     }
-    /*
-    if(!gst_element_link(data.source, data.depayloader)){
-        g_printerr("source and depayloader could not be linked \n");
-        gst_object_unref(data.pipeline);
-        return -1;
-    }
-    if(!gst_element_link(data.depayloader, data.decoder)){
-        g_printerr("depayloader and decoder could not be linked \n");
-        gst_object_unref(data.pipeline);
-        return -1;
-    }
-    if(!gst_element_link(data.decoder, data.sink)){
-        g_printerr("decoder and sink could not be linked \n");
-        gst_object_unref(data.pipeline);
-        return -1;
-    }
-    */
+
 
     g_object_set(data.source, "port", 9000, NULL);
     g_object_set(data.source, "caps", gst_caps_from_string("application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264, payload=(int)96"), NULL);
